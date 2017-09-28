@@ -18,8 +18,13 @@ public class CommandFactory {
     private final static int CHUNK_POSITION_PARAMS_BEGINNING = 2;
 
     public static AbstractCommand create(String[] chunks) throws Exception {
-        if (chunks.length == 1 && chunks[CHUNK_POSITION_COMMAND].equals("help")) {
-                return new HelpCommand();
+        if (chunks.length == 1) {
+            switch (chunks[CHUNK_POSITION_COMMAND]) {
+                case "help":
+                    return new HelpCommand();
+                case "exit":
+                    return new ExitCommand();
+            }
         }
         if (chunks.length > 1) {
             return createRepositoryCommand(chunks);

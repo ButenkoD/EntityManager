@@ -8,9 +8,10 @@ import java.util.Scanner;
 public class ConsoleApplication {
     private static final String WELLCOME_TEXT = "Waiting for the next command...";
     private static final String COMMAND_CHUNKS_DELIMITER = " ";
+    private static boolean exitApplication = false;
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        while (true) {
+        while (!exitApplication) {
             System.out.println(WELLCOME_TEXT);
             String line = scanner.nextLine();
             try {
@@ -20,5 +21,9 @@ public class ConsoleApplication {
                 System.out.println(e.getMessage());
             }
         }
+    }
+
+    public static void exitApplication() {
+        exitApplication = true;
     }
 }
