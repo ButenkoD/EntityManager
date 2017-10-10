@@ -10,7 +10,6 @@ public class PurchaseRepository extends AbstractRepository {
     private static final String CANT_CREATE_MESSAGE = "Can't create purchase, "
             + "expected minimum 2 parameters: customer_id and product_id_1 [product_id_2 ...] \n";
     public String create(List<String> params) throws Exception {
-
         AbstractStorageAction action = new AbstractStorageAction() {
             @Override
             public Object call() throws Exception {
@@ -27,7 +26,7 @@ public class PurchaseRepository extends AbstractRepository {
                             "SELECT p FROM "
                                     + Product.class.getSimpleName()
                                     +" p WHERE p.id IN :ids", Product.class)
-                            .setParameter("ids", productIds).getResultList();;
+                            .setParameter("ids", productIds).getResultList();
                     purchase.setProducts(products);
                     entityManager.persist(purchase);
                     return "New purchase was created";
@@ -45,7 +44,7 @@ public class PurchaseRepository extends AbstractRepository {
         throw new IllegalArgumentException();
     }
 
-    public String remove(int id) throws Exception {
+    private String remove(int id) throws Exception {
         return Storage.getInstance().remove(Purchase.class, id);
     }
 

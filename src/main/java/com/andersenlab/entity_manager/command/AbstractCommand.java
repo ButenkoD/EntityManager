@@ -5,5 +5,5 @@ public abstract class AbstractCommand {
     public abstract AbstractCommand execute() throws Exception;
     public String getResult() {
         return result;
-    };
+    }
 }

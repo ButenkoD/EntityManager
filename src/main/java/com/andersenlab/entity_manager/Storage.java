@@ -1,13 +1,10 @@
 package com.andersenlab.entity_manager;
 
-import com.andersenlab.entity_manager.entity.Product;
-
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import java.util.List;
-import java.util.concurrent.Callable;
 
 public class Storage {
     private final static String PERSISTENCE_UNIT_NAME = "jpa.hibernate";
@@ -90,7 +87,7 @@ public class Storage {
     }
 
     private List selectAll(String classname, EntityManager entityManager) {
-        return entityManager.createQuery("select c from "+classname+" c").getResultList();
+        return entityManager.createQuery("select c from "+classname+" c", Object.class).getResultList();
     }
 
     private String objectsToString(List<?> objects) {

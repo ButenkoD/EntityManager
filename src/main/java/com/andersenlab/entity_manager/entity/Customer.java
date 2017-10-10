@@ -17,10 +17,10 @@ public class Customer {
     public Customer() {
     }
 
-    public Customer(List params) throws IllegalArgumentException {
-        if (params.size() == 2) {
-            this.name = (String) params.get(0);
-            this.surname = (String) params.get(1);
+    public Customer(List<String> params) {
+        if (params != null && params.size() == 2) {
+            this.name = params.get(0);
+            this.surname = params.get(1);
         } else {
             throw new IllegalArgumentException(CANT_CREATE_MESSAGE);
         }

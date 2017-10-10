@@ -1,9 +1,6 @@
 package com.andersenlab.entity_manager.command;
 
-import com.andersenlab.entity_manager.ConsoleApplication;
 import com.andersenlab.entity_manager.entity.AbstractRepository;
-import com.andersenlab.entity_manager.entity.CustomerRepository;
-import com.andersenlab.entity_manager.entity.ProductRepository;
 import com.andersenlab.entity_manager.entity.RepositoryFactory;
 
 import java.util.ArrayList;

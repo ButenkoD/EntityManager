@@ -8,6 +8,8 @@ import java.util.List;
 @Entity
 @Table(name = "purchase")
 public class Purchase {
+    private static final String CANT_CREATE_MESSAGE = "Can't create purchase, "
+            + "expected 2 parameters: customer and list of products\n";
     private int id;
     private Timestamp createdAt;
     private Customer customer;
@@ -17,8 +19,11 @@ public class Purchase {
     }
 
     public Purchase(Customer customer, List<Product> products) {
-        this.customer = customer;
-        this.products = products;
+        if (customer != null && products != null && !products.isEmpty()) {
+            this.customer = customer;
+            this.products = products;
+        }
+        throw new IllegalArgumentException(CANT_CREATE_MESSAGE);
     }
 
     @Id
@@ -61,15 +66,15 @@ public class Purchase {
             @JoinColumn(name = "product_id", referencedColumnName = "id")
         }
     )
-    public List<Product> getProducts() {
+    List<Product> getProducts() {
         return products;
     }
 
-    public void setProducts(List<Product> products) {
+    void setProducts(List<Product> products) {
         this.products = products;
     }
 
-    public void addProduct(Product product) {
+    void addProduct(Product product) {
         if (products.contains(product)) {
             return;
         }

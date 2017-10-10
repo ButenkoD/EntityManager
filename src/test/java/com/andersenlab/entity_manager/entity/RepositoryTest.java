@@ -1,5 +1,5 @@
-import com.andersenlab.entity_manager.entity.CustomerRepository;
-import com.andersenlab.entity_manager.entity.ProductRepository;
+package com.andersenlab.entity_manager.entity;
+
 import org.junit.Test;
 
 import java.util.ArrayList;

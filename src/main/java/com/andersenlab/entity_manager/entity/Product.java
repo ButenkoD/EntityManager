@@ -16,8 +16,8 @@ public class Product {
 
     public Product() {}
 
-    public Product(List params) throws IllegalArgumentException {
-        if (params.size() == 2) {
+    public Product(List params) {
+        if (params != null && params.size() == 2) {
             this.name = (String)params.get(0);
             this.price = Integer.parseInt((String)params.get(1));
         } else {
@@ -60,7 +60,7 @@ public class Product {
     }
 
     @ManyToMany(mappedBy = "products")
-    public List<Purchase> getPurchases() {
+    List<Purchase> getPurchases() {
         return purchases;
     }
 
@@ -68,7 +68,7 @@ public class Product {
         this.purchases = purchases;
     }
 
-    public void addPurchase(Purchase purchase) {
+    void addPurchase(Purchase purchase) {
         if (purchases.contains(purchase)) {
             return;
         }

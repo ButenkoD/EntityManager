@@ -3,6 +3,7 @@ package com.andersenlab.entity_manager.entity;
 import com.andersenlab.entity_manager.Storage;
 import javassist.NotFoundException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CustomerRepository extends AbstractRepository {
@@ -27,12 +28,16 @@ public class CustomerRepository extends AbstractRepository {
         return customer;
     }
 
-    public String remove(int id) throws Exception {
+    private String remove(int id) throws Exception {
         return Storage.getInstance().remove(Customer.class, id);
     }
 
     public String show() throws Exception {
-        List customers = Storage.getInstance().findAll(Customer.class);
+        List<Customer> customers = new ArrayList<>();
+        List objects = Storage.getInstance().findAll(Customer.class);
+        for(Object o : objects) {
+            customers.add((Customer) o);
+        }
         return objectsToString(customers);
     }
 }
