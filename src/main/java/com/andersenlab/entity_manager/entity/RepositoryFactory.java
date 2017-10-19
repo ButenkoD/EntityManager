@@ -1,7 +1,5 @@
 package com.andersenlab.entity_manager.entity;
 
-import com.andersenlab.entity_manager.ConsoleApplication;
-
 public class RepositoryFactory {
     private static final String CANT_FIND_ENTITY_MESSAGE = "Can't find entity ";
     public static AbstractRepository createRepository(String modelName) throws Exception {

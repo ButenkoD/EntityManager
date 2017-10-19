@@ -27,70 +27,70 @@ public class Storage {
         }
     }
 
-    public String save(Object object) throws Exception {
-        AbstractStorageAction action = new AbstractStorageAction() {
+    public <T> String save(T object, Class<T> clazz) throws Exception {
+        AbstractStorageAction<String> action = new AbstractStorageAction<String>() {
             @Override
             public String call() throws Exception {
                 entityManager.persist(object);
-                String classname = object.getClass().getSimpleName();
-                List objects = selectAll(classname, entityManager);
+                List<T> objects = selectAll(clazz, entityManager);
                 return objectsToString(objects);
             }
         };
-        return (String) performAction(action, true);
+        return performAction(action, true);
     }
 
-    public List findAll(Class classObject) throws Exception {
-        AbstractStorageAction action = new AbstractStorageAction() {
+    public <T> List<T> findAll(Class<T> clazz) throws Exception {
+        AbstractStorageAction<List<T>> action = new AbstractStorageAction<List<T>>() {
             @Override
-            public List call() throws Exception {
-                return selectAll(classObject.getSimpleName(), entityManager);
-            }
-        };
-        return (List) performAction(action, false);
-    }
-
-    public Object find(Class<?> classObject, int id) throws Exception {
-        AbstractStorageAction action = new AbstractStorageAction() {
-            @Override
-            public Object call() throws Exception {
-                return entityManager.find(classObject, id);
+            public List<T> call() throws Exception {
+                return selectAll(clazz, entityManager);
             }
         };
         return performAction(action, false);
     }
 
-    public List findAllByIds(Class<?> classObject, List<Integer> ids) throws Exception {
-        AbstractStorageAction action = new AbstractStorageAction() {
+    public <T> T find(Class<T> clazz, int id) throws Exception {
+        AbstractStorageAction<T> action = new AbstractStorageAction<T>() {
             @Override
-            public Object call() throws Exception {
-                return entityManager.createQuery(
-                            "SELECT p FROM "
-                            + classObject.getSimpleName()
-                            +" p WHERE p.id IN :ids", classObject)
-                        .setParameter("ids", ids).getResultList();
+            public T call() throws Exception {
+                return entityManager.find(clazz, id);
             }
         };
-        return (List) performAction(action, false);
+        return performAction(action, false);
     }
 
-    public String remove(Class<?> classObject, int id) throws Exception {
-        AbstractStorageAction action = new AbstractStorageAction() {
+    public <T> List<T> findAllByIds(Class<T> clazz, List<Integer> ids) throws Exception {
+        AbstractStorageAction<List<T>> action = new AbstractStorageAction<List<T>>() {
+            @Override
+            public List<T> call() throws Exception {
+                return entityManager
+                    .createQuery("SELECT p FROM " + clazz.getSimpleName() +" p WHERE p.id IN :ids", clazz)
+                    .setParameter("ids", ids)
+                    .getResultList();
+            }
+        };
+        return performAction(action, false);
+    }
+
+    public <T> String remove(Class<T> clazz, int id) throws Exception {
+        AbstractStorageAction<String> action = new AbstractStorageAction<String>() {
             @Override
             public String call() throws Exception {
-                Object object = entityManager.find(classObject, id);
+                Object object = entityManager.find(clazz, id);
                 entityManager.remove(object);
                 return "This object was removed " + object.toString();
             }
         };
-        return (String) performAction(action, true);
+        return performAction(action, true);
     }
 
-    private List selectAll(String classname, EntityManager entityManager) {
-        return entityManager.createQuery("select c from "+classname+" c", Object.class).getResultList();
+    private <T> List<T> selectAll(Class<T> clazz, EntityManager entityManager) {
+        return entityManager
+            .createQuery("select c from "+clazz.getSimpleName()+" c", clazz)
+            .getResultList();
     }
 
-    private String objectsToString(List<?> objects) {
+    private <T> String objectsToString(List<T> objects) {
         if (objects.isEmpty()) {
             return "Empty table";
         }
@@ -99,7 +99,7 @@ public class Storage {
         return stringBuilder.toString();
     }
 
-    public Object performAction(AbstractStorageAction action, boolean viaTransaction) throws Exception {
+    public <T> T performAction(AbstractStorageAction<T> action, boolean viaTransaction) throws Exception {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         if (viaTransaction) {
@@ -107,7 +107,7 @@ public class Storage {
         }
         try {
             action.setEntityManager(entityManager);
-            Object result = action.call();
+            T result = action.call();
             if (viaTransaction) {
                 transaction.commit();
             }

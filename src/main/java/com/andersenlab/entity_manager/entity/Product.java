@@ -16,10 +16,10 @@ public class Product {
 
     public Product() {}
 
-    public Product(List params) {
+    public Product(List<String> params) {
         if (params != null && params.size() == 2) {
-            this.name = (String)params.get(0);
-            this.price = Integer.parseInt((String)params.get(1));
+            this.name = params.get(0);
+            this.price = Integer.parseInt(params.get(1));
         } else {
             throw new IllegalArgumentException(CANT_CREATE_MESSAGE);
         }

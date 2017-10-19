@@ -3,14 +3,13 @@ package com.andersenlab.entity_manager.entity;
 import com.andersenlab.entity_manager.Storage;
 import javassist.NotFoundException;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class CustomerRepository extends AbstractRepository {
     private static final String CANT_FOUND_MESSAGE = "Can't found customer with id ";
     public String create(List<String> params) throws Exception {
         Customer customer = new Customer(params);
-        return Storage.getInstance().save(customer);
+        return Storage.getInstance().save(customer, Customer.class);
     }
 
     public String remove(List<String> params) throws Exception {
@@ -21,7 +20,7 @@ public class CustomerRepository extends AbstractRepository {
     }
 
     public Customer findById(int id) throws Exception {
-        Customer customer = (Customer) Storage.getInstance().find(Customer.class, id);
+        Customer customer = Storage.getInstance().find(Customer.class, id);
         if (customer == null) {
             throw new NotFoundException(CANT_FOUND_MESSAGE + Integer.toString(id));
         }
@@ -33,11 +32,6 @@ public class CustomerRepository extends AbstractRepository {
     }
 
     public String show() throws Exception {
-        List<Customer> customers = new ArrayList<>();
-        List objects = Storage.getInstance().findAll(Customer.class);
-        for(Object o : objects) {
-            customers.add((Customer) o);
-        }
-        return objectsToString(customers);
+        return objectsToString(Storage.getInstance().findAll(Customer.class));
     }
 }

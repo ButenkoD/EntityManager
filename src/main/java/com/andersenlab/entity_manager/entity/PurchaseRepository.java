@@ -10,9 +10,9 @@ public class PurchaseRepository extends AbstractRepository {
     private static final String CANT_CREATE_MESSAGE = "Can't create purchase, "
             + "expected minimum 2 parameters: customer_id and product_id_1 [product_id_2 ...] \n";
     public String create(List<String> params) throws Exception {
-        AbstractStorageAction action = new AbstractStorageAction() {
+        AbstractStorageAction<String> action = new AbstractStorageAction<String>() {
             @Override
-            public Object call() throws Exception {
+            public String call() throws Exception {
                 Purchase purchase = new Purchase();
                 if (params.size() > 1) {
                     int customerId = Integer.parseInt(params.get(0));
@@ -34,7 +34,7 @@ public class PurchaseRepository extends AbstractRepository {
                 throw new Exception(CANT_CREATE_MESSAGE);
             }
         };
-        return (String) Storage.getInstance().performAction(action, true);
+        return Storage.getInstance().performAction(action, true);
     }
 
     public String remove(List<String> params) throws Exception {
@@ -49,7 +49,7 @@ public class PurchaseRepository extends AbstractRepository {
     }
 
     public String show() throws Exception {
-        List purchases = Storage.getInstance().findAll(Purchase.class);
+        List<Purchase> purchases = Storage.getInstance().findAll(Purchase.class);
         return objectsToString(purchases);
     }
 }

@@ -8,7 +8,7 @@ import java.util.List;
 public class ProductRepository extends AbstractRepository {
     public String create(List<String> params) throws Exception {
         Product product = new Product(params);
-        return Storage.getInstance().save(product);
+        return Storage.getInstance().save(product, Product.class);
     }
 
     public String remove(List<String> params) throws Exception {
@@ -23,16 +23,11 @@ public class ProductRepository extends AbstractRepository {
     }
 
     public String show() throws Exception {
-        List products = Storage.getInstance().findAll(Product.class);
+        List<Product> products = Storage.getInstance().findAll(Product.class);
         return objectsToString(products);
     }
 
     public List<Product> findAllByIds(List<Integer> ids) throws Exception {
-        List<Product> products = new ArrayList<>();
-        List objects = Storage.getInstance().findAllByIds(Product.class, ids);
-        for(Object o : objects) {
-            products.add((Product) o);
-        }
-        return products;
+        return Storage.getInstance().findAllByIds(Product.class, ids);
     }
 }
