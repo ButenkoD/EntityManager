@@ -27,7 +27,7 @@ public class RepositoryFactory {
     private static AbstractRepository getRepositoryObject(String modelName) throws Exception {
         String repositoryClassName = AbstractRepository.class.getPackage().getName()+"."+modelName+"Repository";
         try {
-            Class myClass = Class.forName(repositoryClassName);
+            Class<?> myClass = Class.forName(repositoryClassName);
             return (AbstractRepository) myClass.newInstance();
         } catch(Throwable throwable) {
             throw new IllegalArgumentException(CANT_FIND_ENTITY_MESSAGE + modelName);
