@@ -7,7 +7,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "purchase")
-public class Purchase {
+public class Purchase extends AbstractEntity {
     private static final String CANT_CREATE_MESSAGE = "Can't create purchase, "
             + "expected 2 parameters: customer and list of products\n";
     private int id;
@@ -86,6 +86,6 @@ public class Purchase {
 
     @Override
     public String toString() {
-        return "Id: " + id +" Timestamp: " + createdAt + "\n";
+        return "Id: " + id +", Timestamp: " + createdAt + ";\n";
     }
 }

@@ -5,6 +5,8 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.andersenlab.entity_manager.Storage;
+
 public abstract class AbstractRepository {
     private List<String> accessibleMethods;
 
@@ -35,5 +37,20 @@ public abstract class AbstractRepository {
         StringBuilder stringBuilder = new StringBuilder();
         objects.forEach(stringBuilder::append);
         return stringBuilder.toString();
+    }
+
+    
+    public <T extends AbstractEntity> List<T> findAll(Class<T> clazz) throws Exception {
+    	return Storage.getInstance().findAll(clazz);
+    }
+
+    public <T extends AbstractEntity> String remove(Class<T> clazz, int id) throws Exception {
+        return Storage.getInstance().remove(clazz, id);
+    }
+
+    abstract public String create(List<String> params) throws Exception;
+
+    <T extends AbstractEntity> String create(T entity, Class<T> clazz) throws Exception {
+    	return Storage.getInstance().save(entity, clazz);
     }
 }

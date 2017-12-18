@@ -18,13 +18,12 @@ public class ProductRepository extends AbstractRepository {
         throw new IllegalArgumentException();
     }
 
-    private String remove(int id) throws Exception {
-        return Storage.getInstance().remove(Product.class, id);
+    public String remove(int id) throws Exception {
+        return remove(Product.class, id);
     }
 
     public String show() throws Exception {
-        List<Product> products = Storage.getInstance().findAll(Product.class);
-        return objectsToString(products);
+        return objectsToString(findAll(Product.class));
     }
 
     public List<Product> findAllByIds(List<Integer> ids) throws Exception {

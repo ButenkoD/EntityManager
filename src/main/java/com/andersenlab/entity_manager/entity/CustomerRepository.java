@@ -9,7 +9,7 @@ public class CustomerRepository extends AbstractRepository {
     private static final String CANT_FOUND_MESSAGE = "Can't found customer with id ";
     public String create(List<String> params) throws Exception {
         Customer customer = new Customer(params);
-        return Storage.getInstance().save(customer, Customer.class);
+        return create(customer, Customer.class);
     }
 
     public String remove(List<String> params) throws Exception {
@@ -27,11 +27,11 @@ public class CustomerRepository extends AbstractRepository {
         return customer;
     }
 
-    private String remove(int id) throws Exception {
-        return Storage.getInstance().remove(Customer.class, id);
+    public String remove(int id) throws Exception {
+        return remove(Customer.class, id);
     }
 
     public String show() throws Exception {
-        return objectsToString(Storage.getInstance().findAll(Customer.class));
+        return objectsToString(findAll(Customer.class));
     }
 }

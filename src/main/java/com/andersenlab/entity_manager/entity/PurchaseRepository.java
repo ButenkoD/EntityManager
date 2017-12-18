@@ -44,7 +44,7 @@ public class PurchaseRepository extends AbstractRepository {
         throw new IllegalArgumentException();
     }
 
-    private String remove(int id) throws Exception {
+    public String remove(int id) throws Exception {
         return Storage.getInstance().remove(Purchase.class, id);
     }
 

@@ -6,7 +6,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "product")
-public class Product {
+public class Product extends AbstractEntity {
     private static final String CANT_CREATE_MESSAGE = "Can't create product, "
             + "expected 2 parameters: name and price\n";
     private int id;
@@ -80,6 +80,6 @@ public class Product {
 
     @Override
     public String toString() {
-        return "Id: " + id +" Name: " + name + ", Price: " + price + "\n";
+        return "Id: " + id +", Name: " + name + ", Price: " + price + ";\n";
     }
 }

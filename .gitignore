@@ -4,3 +4,7 @@ build
 gradle
 src/main/resources/META-INF/persistence.xml
 src/test/resources/META-INF/persistence.xml
+/bin/
+.classpath
+.project
+.settings/

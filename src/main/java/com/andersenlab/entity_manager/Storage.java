@@ -4,6 +4,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+
+import com.andersenlab.entity_manager.entity.AbstractEntity;
+
 import java.util.List;
 
 public class Storage {
@@ -27,7 +30,7 @@ public class Storage {
         }
     }
 
-    public <T> String save(T object, Class<T> clazz) throws Exception {
+    public <T extends AbstractEntity> String save(AbstractEntity object, Class<T> clazz) throws Exception {
         AbstractStorageAction<String> action = new AbstractStorageAction<String>() {
             @Override
             public String call() throws Exception {
