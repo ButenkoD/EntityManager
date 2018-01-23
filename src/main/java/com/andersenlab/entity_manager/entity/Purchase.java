@@ -86,6 +86,12 @@ public class Purchase extends AbstractEntity {
 
     @Override
     public String toString() {
-        return "Id: " + id +", Timestamp: " + createdAt + ";\n";
+    	String productsString = "";
+    	for (Product product: products) {
+    		productsString += product.toString();
+    	}
+        return "Id: " + id +", Timestamp: " + createdAt + ";\n"
+        		+ "Customer: " + customer.toString()+ "\n"
+        		+ "Products: " + productsString;
     }
 }

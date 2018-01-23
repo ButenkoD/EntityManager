@@ -113,6 +113,7 @@ abstract public class BaseEntityServlet extends HttpServlet {
 			writer,
 			"/EntityManager/" + entityName + "/create"
 		);
+		HtmlHelper.appendLink(writer, "/EntityManager/" + entityName, "Back");
 	}
 	
 	private void deleteForm(PrintWriter writer, int id) {
