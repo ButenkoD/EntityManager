@@ -26,34 +26,30 @@ abstract public class BaseEntityServlet extends HttpServlet {
 	private String entityName = getEntityClass().getSimpleName().toLowerCase();
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        logger.debug(request);
-		HtmlHelper.setHeaders(response);
-		PrintWriter writer = response.getWriter();
-		if (request.getPathInfo() == null) {
-			index(writer);
-		} else {
-			try {
-				handleRequestWithParams(request, writer);
-			} catch (Exception e) {
-		        logger.error(e);
-				writer.append("Error");
-			}			
+        logger.error(request);
+		try {
+			if (request.getPathInfo() == null) {
+				index(request, response);
+			} else {
+				handleRequestWithParams(request, response);
+			}
+		} catch (Exception e) {
+	        logger.error(e);
+			response.getWriter().append("Error: " + e.getMessage());
 		}
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) {
         logger.debug(request);
-		HtmlHelper.setHeaders(response);
 		List<String> pathChunks = getPathChunks(request);
 		try {
-			PrintWriter writer = response.getWriter();
 			if (!pathChunks.isEmpty()) {
 				switch (pathChunks.get(0)) {
 					case "create":
-						create(request, writer);
+						create(request, response);
 						break;
 					case "delete":
-						delete(request, writer);
+						delete(request, response);
 						break;
 					default:
 						throw new Exception("No such action");
@@ -65,12 +61,10 @@ abstract public class BaseEntityServlet extends HttpServlet {
 		}
 	}
 	
-	private void handleRequestWithParams(HttpServletRequest request, PrintWriter writer) throws Exception {
+	private void handleRequestWithParams(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		List<String> pathChunks = getPathChunks(request);
 		if (!pathChunks.isEmpty() && pathChunks.get(0).equals("create")) {
-			createForm(request, writer);
-		} else {
-			throw new Exception("There's no such action");
+			createForm(request, response);
 		}
 	}
 	
@@ -78,67 +72,44 @@ abstract public class BaseEntityServlet extends HttpServlet {
 		return new ArrayList<String>(Arrays.asList(request.getPathInfo().substring(1).split("/")));
 	}
 
-	private void index(PrintWriter writer) {
-		HtmlHelper.appendLink(writer, "/EntityManager/index", "Back");
-		HtmlHelper.appendLink(
-				writer,
-				"/EntityManager/" + getEntityClass().getSimpleName().toLowerCase() + "/create",
-				"Create"
-		);
-		try {
-			prepareList(writer);
-		} catch (Exception e) {
-	        logger.error(e);
-			writer.append("Error");
-		}
+	private void index(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.setAttribute("template", "list");
+		request.setAttribute("entityName", entityName);
+		request.setAttribute("list", prepareList());
+		request.getRequestDispatcher("/templates/base.jsp").forward(request, response);
 	}
-	
-	private void prepareList(PrintWriter writer) {
+
+	private List<? extends AbstractEntity> prepareList() {
 		try {
 			AbstractRepository repository = RepositoryFactory.createRepository(entityName);
-			writer.append("List:</br>");
-			for (AbstractEntity iter: repository.findAll(getEntityClass())) {
-				writer.append(iter.toString());
-				deleteForm(writer, iter.getId());
-			}
+			return repository.findAll(getEntityClass());
 		} catch (Exception e) {
 	        logger.error(e);
-			writer.append("Error");
+			return null;
 		}
 	}
-	
-	private void createForm(HttpServletRequest request, PrintWriter writer) {
-		writer.append("Create " + entityName);
-		HtmlHelper.appendCreateForm(
-			writer,
-			"/EntityManager/" + entityName + "/create"
-		);
-		HtmlHelper.appendLink(writer, "/EntityManager/" + entityName, "Back");
+
+	private void createForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.setAttribute("template", "createForm");
+		request.setAttribute("entityName", entityName);
+		request.getRequestDispatcher("/templates/base.jsp").forward(request, response);
 	}
 	
-	private void deleteForm(PrintWriter writer, int id) {
-		HtmlHelper.appendDeleteForm(
-			writer,
-			"/EntityManager/" + entityName + "/delete",
-			id
-		);
-	}
-	
-	private void create(HttpServletRequest request, PrintWriter writer) throws Exception {
+	private void create(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		List<String> params = new ArrayList<>(
 				Arrays.asList(request.getParameter("entity").split(" "))
 		);
 		AbstractRepository repository = RepositoryFactory.createRepository(entityName);
 		repository.create(params);
-		writer.append("Success");
-		HtmlHelper.appendLink(writer, "/EntityManager/" + entityName, "Back");
+		request.setAttribute("entityName", entityName);
+		request.getRequestDispatcher("/templates/success.jsp").forward(request, response);
 	}
 
-	private void delete(HttpServletRequest request, PrintWriter writer) throws Exception {
+	private void delete(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		int entityId = Integer.parseInt(request.getParameter("id"));
 		AbstractRepository repository = RepositoryFactory.createRepository(entityName);
 		repository.remove(getEntityClass(), entityId);
-		writer.append("Success");
-		HtmlHelper.appendLink(writer, "/EntityManager/" + entityName, "Back");
+		request.setAttribute("entityName", entityName);
+		request.getRequestDispatcher("/templates/success.jsp").forward(request, response);
 	}
 }
